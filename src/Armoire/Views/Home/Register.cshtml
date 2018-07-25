@@ -1,0 +1,61 @@
+﻿@using Armoire.Common
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Register</h2>
+
+<div class="container log" id="registerContainer">
+
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="card log">
+            <div class="card-header"><h3>Register</h3> Have an account <a href="#">sign in</a>.</div>
+            <div class="card-body">
+                <form method="post" asp-controller="Home" asp-action="Register" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="Username">Username</label>
+                        <input asp-for="Username" type="text" class="form-control" id="Username" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FirstName">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control" id="FirstName" placeholder="Enter first name" />
+                        <span asp-validation-for="FirstName" class="label label-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName">Last Name</label>
+                        <input asp-for="LastName" type="text" class="form-control" id="LastName" placeholder="Enter last name" />
+                        <span asp-validation-for="LastName" class="label label-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone">Phone</label>
+                        <input asp-for="Phone" type="text" class="form-control" id="Phone" placeholder="Enter phone #" />
+                        <span asp-validation-for="Phone" class="label label-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">Email</label>
+                        <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="Enter email" />
+                        <span asp-validation-for="Email" class="label label-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Image">Upload Image</label>
+                        <input asp-for="Image" type="file" class="form-control" id="Image" placeholder="browse" />
+                        <span asp-validation-for="Image" class="label label-danger"></span>
+                    </div>
+                    <div class="col-sm-8"><button type="submit" class="btn btn-primary btn-sm btn-block">Regiser</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3"></div>
+
+</div><!--end of container-->
+
+
+

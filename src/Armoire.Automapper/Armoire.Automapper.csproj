@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <ProjectReference Include="..\Armoire.Common\Armoire.Common.csproj" />
+    <ProjectReference Include="..\Armoire.Entities\Armoire.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

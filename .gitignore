@@ -1,0 +1,90 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.o
+*.so
+
+# Logs #
+########
+*.log
+
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# .NET Specific Folders #
+#########################
+obj
+obj/*
+bin
+bin/*
+deploy
+deploy/*
+_ReSharper.*
+*.csproj.user
+*.Resharper.user
+*.resharper
+*.suo
+*.cache
+~$*
+*.licx
+*/obj
+*.resharper
+
+*.cache
+Connections.config
+
+*.user
+.ReSharper
+Migrations.msbuild
+
+localSettings.config
+# MS Office Temp Files #
+########################
+docs/*._*
+docs/*~$*
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/DST.V3/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+/DST.V3/.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/DST.V3/e2e/*.js
+/DST.V3/e2e/*.map
+
+# System Files
+/DST.V3/.DS_Store
+Thumbs.db
