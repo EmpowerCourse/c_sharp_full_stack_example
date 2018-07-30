@@ -18,6 +18,11 @@ namespace Armoire.Services
             return Convert.ToInt32(_configuration[key]);
         }
 
+        public bool GetBoolValue(string key)
+        {
+            return Convert.ToBoolean(_configuration[key]);
+        }
+
         public string GetStringValue(string key)
         {
             var rawValue = GetValue(key);

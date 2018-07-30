@@ -8,17 +8,24 @@ using System.Threading;
 using Ninject.Activation;
 using Ninject.Infrastructure.Disposal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Armoire.Services;
 using Armoire.Infrastructure;
 using nh = NHibernate;
 using Armoire.Entities;
 using Armoire.Common;
 using Armoire.Automapper;
+using Armoire.Persistence;
+using System.Net.Mail;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Razor.Language;
+using System.Reflection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace Armoire
 {
@@ -46,8 +53,25 @@ namespace Armoire
             services.AddRequestScopingMiddleware(() => scopeProvider.Value = new Scope());
             services.AddCustomControllerActivation(Resolve);
             services.AddCustomViewComponentActivation(Resolve);
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+                options.LoginPath = "/Home/Login";
+                options.LogoutPath = "/Home/Logout";
+                options.AccessDeniedPath = "/Home/Error";
+            });
             services.AddMvc();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Users", policy => policy.RequireClaim(AppConstants.CLAIM_TYPE_USER_ID));
+                options.AddPolicy("Administrators", policy => policy.RequireClaim(ClaimTypes.Role, ((int)TypeOfUserRole.Administrator).ToString()));
+            });
+
+            //services.AddTransient<IViewRenderService, ViewRenderService>();
+            //var viewAssembly = typeof(Program).GetTypeInfo().Assembly;
+            //var fileProvider = new EmbeddedFileProvider(viewAssembly);
+            //services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    options.FileProviders.Add(fileProvider);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +87,7 @@ namespace Armoire
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
@@ -70,12 +95,10 @@ namespace Armoire
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseAuthentication();
         }
 
         private IKernel RegisterApplicationComponents(IApplicationBuilder app)
         {
-            // IKernelConfiguration config = new KernelConfiguration();
             var kernel = new StandardKernel();
             // Register application services
             foreach (var ctrlType in app.GetControllerTypes())
@@ -91,10 +114,28 @@ namespace Armoire
             kernel.Bind<nh.ISession>().ToMethod(m => new NhHelper(
                  new SettingsService(Configuration)
                 ).Session);
-            //kernel.Bind(typeof(IRepository<>))
-            //    .To(typeof(NHibernateRepository<>))
-            //    .InScope(RequestScope);
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InScope(RequestScope);
+            kernel.Bind(typeof(IRepository<>)).To(typeof(NHibernateRepository<>)).InScope(RequestScope);
+            kernel.Bind<INotificationService>().To<NotificationService>().InScope(RequestScope);
             kernel.Bind<IUserService>().To<UserService>().InScope(RequestScope);
+            //kernel.Bind<IViewCompilerProvider>().To<RazorViewCompilerProvider>().InScope(RequestScope);
+            //kernel.Bind<IRazorPageFactoryProvider>().To<DefaultRazorPageFactoryProvider>().InScope(RequestScope);
+            //kernel.Bind<IRazorViewEngine>().To<RazorViewEngine>().InScope(RequestScope);
+            //kernel.Bind<RazorProjectEngine>().ToSelf().InScope(RequestScope);
+            //kernel.Bind<ITempDataProvider>().To<SessionStateTempDataProvider>().InScope(RequestScope);
+            //kernel.Bind<IServiceProvider>().To<ServiceProvider>().InScope(RequestScope);
+            //kernel.Bind<IViewRenderService>().To<ViewRenderService>().InScope(RequestScope);
+            kernel.Bind<ICipherService>().To<CipherService>().InScope(RequestScope);
+            kernel.Bind<SmtpClient>().ToMethod(ctx => {
+                var settings = ctx.Kernel.Get<ISettingsService>();
+                SmtpClient client = new SmtpClient(settings.GetStringValue("Email:MailServer"), settings.GetIntValue("Email:MailServerPort"));
+                if (settings.GetBoolValue("Email:MailServerRequiresAuthentication"))
+                {
+                    client.Credentials = new System.Net.NetworkCredential(settings.GetStringValue("Email:MailServerUsername"), settings.GetStringValue("Email:MailServerPassword"));
+                }
+                client.EnableSsl = settings.GetBoolValue("Email:MailServerRequiresSSL");
+                return client;
+            }).InThreadScope();
             return kernel;
         }
     }

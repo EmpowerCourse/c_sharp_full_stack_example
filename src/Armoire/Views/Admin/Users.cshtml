@@ -1,0 +1,67 @@
+﻿@model Armoire.Common.UserListVM
+@{
+    ViewData["Title"] = "Administration: Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    table#user-search td {
+        padding: 3px;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-10">
+        <table id="user-search" style="width: 90%; padding: 5px; margin-bottom: 0; float: left;">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>Member of Role</td>
+                    <td style="width: 120px;">Active Only</td>
+                </tr>
+                <tr>
+                    <td>@Html.TextBox("FilterName", null, new { style = "width: 220px;" })</td>
+                    <td>@Html.DropDownList("FilterRole", new SelectList(Model.RoleList, "Id", "Name"), null, new { style = "width: 150px;" })</td>
+                    <td>@Html.CheckBox("FilterActive", true)</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pull-right" style="padding-top: 18px;">
+            <span id="filter-btn" class="btn btn-primary">Find</span>
+        </div>
+    </div>
+    <div class="col-xs-2">
+        <div class="btn-group pull-right" style="padding-top: 18px;">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-user"></i> Add
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a id="add-user" href="#">
+                        <i class="icon-user"></i> User
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 0px;">
+    <div class="col-xs-12">
+        @Html.Partial("_UserList", Model.UserList)
+    </div>
+</div>
+
+<div id="panelDetails" style="display: none;">
+    <div id="panelDetailsContents"></div>
+</div>
+@*@section Scripts {
+    <script src="@Url.Content(Links.Scripts.App.admin_common_js)"></script>
+    <script type="text/javascript">
+        CF.UserAdmin.Init({
+                Filter: '@Url.Action(MVC.Administration.ActionNames.FilterUsers, MVC.Administration.Name)',
+                DeleteUser: '@Url.Action(MVC.Administration.ActionNames.ToggleUserActive, MVC.Administration.Name)',
+                ReviveUser: '@Url.Action(MVC.Administration.ActionNames.ToggleUserActive, MVC.Administration.Name)',
+                NewUserView: '@Url.Action(MVC.Administration.ActionNames.NewUser, MVC.Administration.Name)',
+                EditUserView: '@Url.Action(MVC.Administration.ActionNames.EditUser, MVC.Administration.Name)',
+                Commit: '@Url.Action(MVC.Administration.ActionNames.SaveUser, MVC.Administration.Name)'
+            });
+    </script>*@

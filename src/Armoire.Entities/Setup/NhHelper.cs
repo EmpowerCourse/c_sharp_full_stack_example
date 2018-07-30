@@ -88,7 +88,7 @@ namespace Armoire.Entities
                                 {
                                     x.Add(AutoImport.Never());
                                 })
-                                .AddFromAssemblyOf<PatronMap>();
+                                .AddFromAssemblyOf<UserMap>();
 
                         }
                 );

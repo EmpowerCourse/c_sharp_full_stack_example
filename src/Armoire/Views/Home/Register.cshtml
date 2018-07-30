@@ -1,11 +1,18 @@
 ﻿@using Armoire.Common
-@model RegisterViewModel
+@model RegisterVM
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Register</h2>
+@if (!String.IsNullOrEmpty(Model.Message))
+{
+
+    <div class="alert alert-info">
+        @Model.Message
+    </div>
+}
 
 <div class="container log" id="registerContainer">
 
@@ -56,6 +63,3 @@
     <div class="col-lg-3"></div>
 
 </div><!--end of container-->
-
-
-

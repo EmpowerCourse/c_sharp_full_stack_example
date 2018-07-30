@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Armoire.Common;
 
 namespace Armoire.Persistence
@@ -12,9 +11,7 @@ namespace Armoire.Persistence
     {
         private readonly ISession _session;
 
-        public NHibernateRepository(
-            ISession session
-        )
+        public NHibernateRepository(ISession session)
         {
             _session = session;
         }
@@ -35,10 +32,10 @@ namespace Armoire.Persistence
             return _session.Get<TEntity>(id);
         }
 
-        //public IQueryOver<TEntity, TEntity> GetQueryOver()
-        //{
-        //    return _session.QueryOver<TEntity>();
-        //}
+        public IQueryOver<TEntity, TEntity> GetQueryOver()
+        {
+            return _session.QueryOver<TEntity>();
+        }
 
         public IQueryable<TEntity> GetQuery()
         {

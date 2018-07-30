@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Armoire.Common
 {
-    public class RegisterViewModel
+    public class RegisterVM
     {
+        public string Message { get; set; }
+
         [Required(ErrorMessage = "Please enter your first name")]
         public string FirstName { get; set; }
 

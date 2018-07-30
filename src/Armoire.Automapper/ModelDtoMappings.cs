@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Armoire.Common;
 using Armoire.Entities;
+using System.Linq;
 
 namespace Armoire.Automapper
 {
@@ -11,12 +12,14 @@ namespace Armoire.Automapper
     {
         public IMapperConfigurationExpression AddMappingsToAutoMapper(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<Patron, PatronDto>();
+            cfg.CreateMap<User, UserDto>()
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.DeactivatedAt == null))
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.RoleList == null || src.RoleList.Count == 0
+                    ? new List<TypeOfUserRole>()
+                    : src.RoleList.ToList()
+                        .Select(s => s.TypeOfUserRole)
+                        .ToList()));
             return cfg;
-            //Mapper.CreateMap<ManufacturerDealerLot, SimpleDto>()
-            //    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Dealer.Id))
-            //    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Dealer.Name))
-            //    ;
         }
     }
 }

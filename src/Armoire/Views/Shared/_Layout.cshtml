@@ -33,8 +33,19 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Login">Login</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Register">Register</a></li>
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsAdministrator())
+                        {
+                             <li><a asp-area="" asp-controller="Admin" asp-action="Users">User Administration</a></li>
+                        }
+                        <li><a asp-area="" asp-controller="Home" asp-action="LogoutAsync">Sign Off</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Register">Register</a></li>
+                    }
                 </ul>
             </div>
         </div>
@@ -46,11 +57,9 @@
             <p>&copy; 2018 - Armoire</p>
         </footer>
     </div>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -65,9 +74,9 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script src="~/lib/toastr.min.js"></script>
+    <script asp-src-include="~/js/*.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

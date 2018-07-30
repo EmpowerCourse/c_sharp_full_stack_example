@@ -1,0 +1,71 @@
+﻿@model Armoire.Common.IPagination<Armoire.Common.UserDto>
+<div id="user-list">
+    @if (Model.Any())
+    {
+        <table class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Active</th>
+                    <th>Roles</th>
+                    <th style="width:165px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr data-id="@item.Id">
+                        <td>
+                            @item.FirstName @item.LastName
+                        </td>
+                        <td>@item.Username</td>
+                        <td>@item.Email</td>
+                        <td>
+                            @(item.IsActive ? "Y" : "N")
+                        </td>
+                        <td>
+                            <span class='user-role-list'>
+                                @{
+                                    var roleInfo = item.RoleInformation;
+                                }
+                                @if (item.Roles != null)
+                                {
+                                    if (roleInfo.Length > 50)
+                                    {
+                                        <span title='@Html.Raw(roleInfo)'>
+                                            @Html.Raw(roleInfo.Substring(0, 47) + "...")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <text>@Html.Raw(roleInfo)</text>
+                                    }
+                                }
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <span class='btn btn-xs btn-inverse edit'>Edit</span>
+                                @if (item.IsActive)
+                                {
+                                    <span class='btn btn-xs btn-danger delete'>Delete</span>
+                                }
+                                else
+                                {
+                                    <span class='btn btn-xs btn-warning revive'>Revive</span>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @*@Html.AjaxPager(Model)*@
+    }
+    else
+    {
+        <div>No user records found.  Change your filter criteria.</div>
+    }
+</div>

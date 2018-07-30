@@ -8,6 +8,7 @@ namespace Armoire.Common
     {
         string GetStringValue(string key);
         int GetIntValue(string key);
+        bool GetBoolValue(string key);
         object GetValue(string key);
     }
 }
