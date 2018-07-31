@@ -50,18 +50,31 @@
     </div>
 </div>
 
-<div id="panelDetails" style="display: none;">
-    <div id="panelDetailsContents"></div>
+<div class="modal fade" tabindex="-1" role="dialog" id="user-edit-dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit User</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="commit-user">Save</button>
+            </div>
+        </div>
+    </div>
 </div>
-@*@section Scripts {
-    <script src="@Url.Content(Links.Scripts.App.admin_common_js)"></script>
-    <script type="text/javascript">
-        CF.UserAdmin.Init({
-                Filter: '@Url.Action(MVC.Administration.ActionNames.FilterUsers, MVC.Administration.Name)',
-                DeleteUser: '@Url.Action(MVC.Administration.ActionNames.ToggleUserActive, MVC.Administration.Name)',
-                ReviveUser: '@Url.Action(MVC.Administration.ActionNames.ToggleUserActive, MVC.Administration.Name)',
-                NewUserView: '@Url.Action(MVC.Administration.ActionNames.NewUser, MVC.Administration.Name)',
-                EditUserView: '@Url.Action(MVC.Administration.ActionNames.EditUser, MVC.Administration.Name)',
-                Commit: '@Url.Action(MVC.Administration.ActionNames.SaveUser, MVC.Administration.Name)'
-            });
-    </script>*@
+@section Scripts {
+<script type="text/javascript">
+    App.UserAdmin.Init({
+        Filter: '/Admin/FilterUsers',
+        DeleteUser: '/Admin/ToggleUserActive',
+        ReviveUser: '/Admin/ToggleUserActive',
+        NewUserView: '/Admin/NewUser',
+        EditUserView: '/Admin/EditUser',
+        Commit: '/Admin/SaveUser'
+    });
+</script>
+}

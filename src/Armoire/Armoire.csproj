@@ -7,6 +7,12 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\BaseController.cs" />
+    <Compile Remove="Infrastructure\IViewRenderService.cs" />
+    <Compile Remove="Infrastructure\ViewRenderService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\admin-common.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +37,12 @@
     <ProjectReference Include="..\Armoire.Common\Armoire.Common.csproj" />
     <ProjectReference Include="..\Armoire.Persistence\Armoire.Persistence.csproj" />
     <ProjectReference Include="..\Armoire.Services\Armoire.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Admin\_EditUser.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>

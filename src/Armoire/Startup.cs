@@ -8,9 +8,6 @@ using System.Threading;
 using Ninject.Activation;
 using Ninject.Infrastructure.Disposal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Armoire.Services;
 using Armoire.Infrastructure;
@@ -21,11 +18,6 @@ using Armoire.Automapper;
 using Armoire.Persistence;
 using System.Net.Mail;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Razor.Language;
-using System.Reflection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace Armoire
 {
@@ -64,14 +56,6 @@ namespace Armoire
                 options.AddPolicy("Users", policy => policy.RequireClaim(AppConstants.CLAIM_TYPE_USER_ID));
                 options.AddPolicy("Administrators", policy => policy.RequireClaim(ClaimTypes.Role, ((int)TypeOfUserRole.Administrator).ToString()));
             });
-
-            //services.AddTransient<IViewRenderService, ViewRenderService>();
-            //var viewAssembly = typeof(Program).GetTypeInfo().Assembly;
-            //var fileProvider = new EmbeddedFileProvider(viewAssembly);
-            //services.Configure<RazorViewEngineOptions>(options =>
-            //{
-            //    options.FileProviders.Add(fileProvider);
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,18 +97,11 @@ namespace Armoire
             kernel.Bind<ISettingsService>().To<SettingsService>().InSingletonScope();
             kernel.Bind<nh.ISession>().ToMethod(m => new NhHelper(
                  new SettingsService(Configuration)
-                ).Session);
+                ).Session).InScope(RequestScope);
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InScope(RequestScope);
             kernel.Bind(typeof(IRepository<>)).To(typeof(NHibernateRepository<>)).InScope(RequestScope);
             kernel.Bind<INotificationService>().To<NotificationService>().InScope(RequestScope);
             kernel.Bind<IUserService>().To<UserService>().InScope(RequestScope);
-            //kernel.Bind<IViewCompilerProvider>().To<RazorViewCompilerProvider>().InScope(RequestScope);
-            //kernel.Bind<IRazorPageFactoryProvider>().To<DefaultRazorPageFactoryProvider>().InScope(RequestScope);
-            //kernel.Bind<IRazorViewEngine>().To<RazorViewEngine>().InScope(RequestScope);
-            //kernel.Bind<RazorProjectEngine>().ToSelf().InScope(RequestScope);
-            //kernel.Bind<ITempDataProvider>().To<SessionStateTempDataProvider>().InScope(RequestScope);
-            //kernel.Bind<IServiceProvider>().To<ServiceProvider>().InScope(RequestScope);
-            //kernel.Bind<IViewRenderService>().To<ViewRenderService>().InScope(RequestScope);
             kernel.Bind<ICipherService>().To<CipherService>().InScope(RequestScope);
             kernel.Bind<SmtpClient>().ToMethod(ctx => {
                 var settings = ctx.Kernel.Get<ISettingsService>();

@@ -1,4 +1,6 @@
-﻿@model Armoire.Common.IPagination<Armoire.Common.UserDto>
+﻿@using Armoire.Infrastructure
+@using Armoire.Common
+@model IPagination<UserDto>
 <div id="user-list">
     @if (Model.Any())
     {
@@ -62,7 +64,7 @@
                 }
             </tbody>
         </table>
-        @*@Html.AjaxPager(Model)*@
+        @Html.AjaxPager(Model)
     }
     else
     {

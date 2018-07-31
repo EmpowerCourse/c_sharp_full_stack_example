@@ -12,7 +12,8 @@ namespace Armoire.Automapper
         public IMapperConfigurationExpression AddMappingsToAutoMapper(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<RegisterVM, UserDto>();
-            //cfg.CreateMap<UserDto, UserVM>();
+            cfg.CreateMap<UserDto, UserVM>();
+            cfg.CreateMap<UserVM, UserDto>();
             return cfg;
         }
     }

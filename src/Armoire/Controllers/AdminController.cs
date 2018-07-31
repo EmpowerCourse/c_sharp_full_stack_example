@@ -116,13 +116,11 @@ namespace Armoire.Controllers
 
         public virtual ActionResult SaveUser(UserVM vm)
         {
-            var dto = _mapper.Map<UserVM, UserDto>(vm);
-            dto.Roles = vm.RoleSelection.Where(x => x.Selected).Select(x => x.Role).ToList();
-            if (!User.IsAdministrator())
-            {
-                throw new ApplicationException(AppConstants.ERR_ACCESS_DENIED);
-            }
+            if (!User.IsAdministrator()) throw new ApplicationException(AppConstants.ERR_ACCESS_DENIED);
             var currentUser = this.GetCurrentUser(_userService);
+            var dto = _mapper.Map<UserVM, UserDto>(vm);
+            if (vm.RoleSelection == null) vm.RoleSelection = new List<RoleSelection>();
+            dto.Roles = vm.RoleSelection.Where(x => x.Selected).Select(x => x.Role).ToList();
             try
             {
                 if (vm.Id > 0)
@@ -152,11 +150,8 @@ namespace Armoire.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult FilterUsers(int? dealerId, int? distributorId, int? roleId,
-            string name, bool activeOnly, GridSortOptions gridSortOptions, int? page)
+        public virtual ActionResult FilterUsers(int? roleId, string name, bool activeOnly, GridSortOptions gridSortOptions, int? page)
         {
-            if (dealerId == AppConstants.PLACEHOLDER_ROW_ID) dealerId = null;
-            if (distributorId == AppConstants.PLACEHOLDER_ROW_ID) distributorId = null;
             TypeOfUserRole? role = null;
             if (roleId.HasValue && roleId.Value > 0)
             {
